@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 
 // Floating Damage Text Component
 type FloatingDamageItem = {
@@ -328,6 +328,7 @@ const GlassFilter: React.FC = () => (
 // Main Component
 export const Component = () => {
   const [emailPressed, setEmailPressed] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [floatingTexts, setFloatingTexts] = useState<FloatingDamageItem[]>([]);
   const isTouchLike = useIsTouchLike();
   const emailRef = useRef<HTMLDivElement | null>(null);
@@ -459,12 +460,24 @@ export const Component = () => {
             navigator.clipboard.writeText("AhmedDev@email.com");
             setEmailPressed(false);
             spawnDamage("Copied", anchor);
+
+            // Visual feedback: blink + shake + icon swap
+            setCopied(true);
+            emailRef.current?.classList.add("animate-shake");
+            setTimeout(() => {
+              setCopied(false);
+              emailRef.current?.classList.remove("animate-shake");
+            }, 900);
           }}
         >
           <GlassButton className={`px-6 py-3 transition-all duration-700 ${isTouchLike && emailPressed ? "px-7 py-4 rounded-4xl" : ""}`}>
             <div className="text-lg text-white flex items-center gap-3">
-              <p>AhmedDev@email.com</p>
-              <Copy size={16} className="opacity-60" />
+              <p className={copied ? "animate-color-blink" : ""}>AhmedDev@email.com</p>
+              {copied ? (
+                <Check size={16} className="text-green-400 transition-all duration-300" />
+              ) : (
+                <Copy size={16} className="opacity-60" />
+              )}
             </div>
           </GlassButton>
         </div>
