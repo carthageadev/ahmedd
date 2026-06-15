@@ -23,7 +23,7 @@
   }
   100% {
     opacity: 0;
-    transform: translateY(-80px) scale(0.9) rotate(5deg);
+    transform: translate(var(--drift-x, 0), calc(-80px + var(--drift-y, 0px))) scale(0.9) rotate(calc(5deg + var(--drift-rotate, 0deg)));
   }
 }
 

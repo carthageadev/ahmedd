@@ -29,7 +29,7 @@ const FloatingDamage: React.FC<{ item: FloatingDamageItem; onComplete: () => voi
 
   return (
     <div 
-      className="fixed pointer-events-none z-[9999] font-bold text-white whitespace-nowrap animate-damage"
+      className="fixed pointer-events-none z-[9999] font-bold text-white whitespace-nowrap"
       style={{
         left: item.left,
         top: item.top,
@@ -37,13 +37,19 @@ const FloatingDamage: React.FC<{ item: FloatingDamageItem; onComplete: () => voi
         textShadow: "0 0 7px rgba(0,0,0,0.4), 1.5px 1.5px 0px rgba(0,0,0,0.65)",
         fontSize: "clamp(0.8rem, 2.4vw, 1.15rem)",
         WebkitTextStroke: "1px rgba(255,255,255,0.1)",
-        animationDelay: "0ms",
-        ["--drift-x" as any]: `${item.driftX}px`,
-        ["--drift-y" as any]: `${item.driftY}px`,
-        ["--drift-rotate" as any]: `${item.rotate}deg`,
       }}
     >
-      {item.text}
+      <span 
+        className="animate-damage inline-block"
+        style={{
+          animationDelay: "0ms",
+          ["--drift-x" as any]: `${item.driftX}px`,
+          ["--drift-y" as any]: `${item.driftY}px`,
+          ["--drift-rotate" as any]: `${item.rotate}deg`,
+        }}
+      >
+        {item.text}
+      </span>
     </div>
   );
 };
@@ -440,7 +446,9 @@ export const Component = () => {
             event.stopPropagation();
 
             const rect = emailRef.current?.getBoundingClientRect();
-            const anchor = rect ? { left: rect.right + 12, top: rect.top + 16 } : undefined;
+            const anchor = rect
+              ? { left: rect.left + rect.width / 2, top: rect.top - 8 }
+              : undefined;
 
             if (isTouchLike && !emailPressed) {
               setEmailPressed(true);
