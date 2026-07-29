@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { Copy } from "lucide-react";
+import { Copy, Check } from "lucide-react";
 
 // Floating Damage Text Component
 type FloatingDamageItem = {
@@ -332,6 +332,7 @@ export const Component = () => {
   const [floatingTexts, setFloatingTexts] = useState<FloatingDamageItem[]>([]);
   const isTouchLike = useIsTouchLike();
   const emailRef = useRef<HTMLDivElement | null>(null);
+  const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const spawnDamage = (text: string, anchor?: { left: number; top: number }) => {
     const id = Math.random().toString(36).substring(7);
@@ -373,6 +374,12 @@ export const Component = () => {
   }, [isTouchLike]);
 
   useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     const handleSpawn = (e: Event) => {
       const custom = e as CustomEvent<FloatingDamageSpawn>;
       spawnDamage(custom.detail.text, custom.detail.left !== undefined && custom.detail.top !== undefined ? { left: custom.detail.left, top: custom.detail.top } : undefined);
@@ -409,10 +416,16 @@ export const Component = () => {
       onClick: () => window.open("https://www.reddit.com/user/CarthageaDev/", "_blank"),
     },
     {
-      src: "/icons/steam.png",
-      alt: "id/carthageadev",
-      onClick: () => window.open("https://steamcommunity.com/id/carthageadev/", "_blank"),
+      src: "/icons/github.png",
+      alt: "GitHub",
+      onClick: () => window.open("https://github.com/Ahmedd-dot-me", "_blank"),
     },
+    // Steam icon — kept for future use
+    // {
+    //   src: "/icons/steam.png",
+    //   alt: "id/carthageadev",
+    //   onClick: () => window.open("https://steamcommunity.com/id/carthageadev/", "_blank"),
+    // },
   ];
 
   return (
@@ -461,15 +474,20 @@ export const Component = () => {
             setEmailPressed(false);
             spawnDamage("Copied", anchor);
 
-            // Visual feedback: subtle glow
+            // Subtle icon swap feedback — clear previous timeout to avoid flicker on spam
+            if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
             setCopied(true);
-            setTimeout(() => setCopied(false), 600);
+            copiedTimeoutRef.current = setTimeout(() => setCopied(false), 1200);
           }}
         >
           <GlassButton className={`px-6 py-3 transition-all duration-700 ${isTouchLike && emailPressed ? "px-7 py-4 rounded-4xl" : ""}`}>
             <div className="text-lg text-white flex items-center gap-3">
-              <p className={copied ? "animate-email-glow" : ""}>AhmedDev@email.com</p>
-              <Copy size={16} className="opacity-60" />
+              <p>AhmedDev@email.com</p>
+              {copied ? (
+                <Check size={16} className="opacity-80 transition-opacity duration-300" />
+              ) : (
+                <Copy size={16} className="opacity-60" />
+              )}
             </div>
           </GlassButton>
         </div>

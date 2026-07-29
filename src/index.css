@@ -30,29 +30,3 @@
 .animate-damage {
   animation: float-up-damage 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
-
-@keyframes email-glow {
-  0% { text-shadow: none; }
-  40% { text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
-  100% { text-shadow: none; }
-}
-
-.animate-email-glow {
-  animation: email-glow 0.5s ease-out forwards;
-}
-
-@keyframes screen-shake {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-3px, 2px); }
-  20% { transform: translate(3px, -2px); }
-  30% { transform: translate(-2px, 3px); }
-  40% { transform: translate(2px, -1px); }
-  50% { transform: translate(-1px, 2px); }
-  60% { transform: translate(1px, -1px); }
-  70% { transform: translate(-1px, 1px); }
-  80% { transform: translate(1px, 0); }
-}
-
-.animate-shake {
-  animation: screen-shake 0.4s ease-out;
-}
