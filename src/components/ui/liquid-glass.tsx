@@ -418,7 +418,7 @@ export const Component = () => {
     {
       src: "/icons/github.png",
       alt: "GitHub",
-      onClick: () => window.open("https://github.com/Ahmedd-dot-me", "_blank"),
+      onClick: () => window.open("https://github.com/carthageadev", "_blank"),
     },
     // Steam icon — kept for future use
     // {
