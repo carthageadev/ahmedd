@@ -329,10 +329,12 @@ const GlassFilter: React.FC = () => (
 export const Component = () => {
   const [emailPressed, setEmailPressed] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [bouncing, setBouncing] = useState(false);
   const [floatingTexts, setFloatingTexts] = useState<FloatingDamageItem[]>([]);
   const isTouchLike = useIsTouchLike();
   const emailRef = useRef<HTMLDivElement | null>(null);
   const copiedTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bounceTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const spawnDamage = (text: string, anchor?: { left: number; top: number }) => {
     const id = Math.random().toString(36).substring(7);
@@ -376,6 +378,7 @@ export const Component = () => {
   useEffect(() => {
     return () => {
       if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
+      if (bounceTimeoutRef.current) clearTimeout(bounceTimeoutRef.current);
     };
   }, []);
 
@@ -464,12 +467,6 @@ export const Component = () => {
               ? { left: rect.left + rect.width / 2, top: rect.top - 8 }
               : undefined;
 
-            if (isTouchLike && !emailPressed) {
-              setEmailPressed(true);
-              spawnDamage("Tap again", anchor);
-              return;
-            }
-
             navigator.clipboard.writeText("AhmedDev@email.com");
             setEmailPressed(false);
             spawnDamage("Copied", anchor);
@@ -478,11 +475,19 @@ export const Component = () => {
             if (copiedTimeoutRef.current) clearTimeout(copiedTimeoutRef.current);
             setCopied(true);
             copiedTimeoutRef.current = setTimeout(() => setCopied(false), 1200);
+
+            // Bounce effect — re-triggers on each click
+            if (bounceTimeoutRef.current) clearTimeout(bounceTimeoutRef.current);
+            setBouncing(false);
+            requestAnimationFrame(() => {
+              setBouncing(true);
+              bounceTimeoutRef.current = setTimeout(() => setBouncing(false), 350);
+            });
           }}
         >
           <GlassButton className={`px-6 py-3 transition-all duration-700 ${isTouchLike && emailPressed ? "px-7 py-4 rounded-4xl" : ""}`}>
             <div className="text-lg text-white flex items-center gap-3">
-              <p>AhmedDev@email.com</p>
+              <p className={bouncing ? "animate-email-bounce" : ""}>AhmedDev@email.com</p>
               {copied ? (
                 <Check size={16} className="opacity-80 transition-opacity duration-300" />
               ) : (

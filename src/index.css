@@ -30,3 +30,13 @@
 .animate-damage {
   animation: float-up-damage 1.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
+
+@keyframes email-bounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-3px); }
+  60% { transform: translateY(1px); }
+}
+
+.animate-email-bounce {
+  animation: email-bounce 0.35s ease-out;
+}
